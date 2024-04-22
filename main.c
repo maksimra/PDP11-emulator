@@ -1,7 +1,7 @@
 #include "pdp11.h"
 
-int main (void)
+int main ()
 {
-    
+    test_mem();
     return 0;
 }

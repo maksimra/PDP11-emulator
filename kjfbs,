@@ -1,0 +1,79 @@
+[1mdiff --git a/main.c b/main.c[m
+[1mindex 8434b98..bd8cb64 100644[m
+[1m--- a/main.c[m
+[1m+++ b/main.c[m
+[36m@@ -1,7 +1,7 @@[m
+ #include "pdp11.h"[m
+ [m
+[31m-int main (void)[m
+[32m+[m[32mint main ()[m
+ {[m
+[31m-    [m
+[32m+[m[32m    test_mem();[m
+     return 0;[m
+ }[m
+[1mdiff --git a/pdp11.c b/pdp11.c[m
+[1mindex e69de29..c729e3e 100644[m
+[1m--- a/pdp11.c[m
+[1m+++ b/pdp11.c[m
+[36m@@ -0,0 +1,39 @@[m
+[32m+[m[32m#include "pdp11.h"[m
+[32m+[m
+[32m+[m[32mbyte mem [MEMSIZE];[m
+[32m+[m
+[32m+[m[32mvoid b_write (Adress adr, byte b)[m
+[32m+[m[32m{[m
+[32m+[m[32m    mem[adr] = b;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mbyte b_read (Adress adr)[m
+[32m+[m[32m{[m
+[32m+[m[32m    return mem[adr];[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mword w_read (Adress a)[m
+[32m+[m[32m{[m
+[32m+[m[32m    word w = ((word) mem[a+1]) << 8;[m
+[32m+[m[32m    w = w | mem[a];[m
+[32m+[m[32m    printf ("w = %x\n", w);[m
+[32m+[m[32m    return w;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mvoid test_mem ()[m
+[32m+[m[32m{[m
+[32m+[m[32m    byte b0 = 0x0a;[m
+[32m+[m[32m    b_write (2, b0);[m
+[32m+[m[32m    byte bres = b_read (2);[m
+[32m+[m[32m    printf ("%02hhx = %02hhx\n", b0, bres);[m
+[32m+[m[32m    assert (b0 == bres);[m
+[32m+[m
+[32m+[m[32m    Adress a = 4;[m
+[32m+[m[32m    byte b1 = 0x0b;[m
+[32m+[m[32m    word w = 0x0b0a;[m
+[32m+[m[32m    b_write (a, b0);[m
+[32m+[m[32m    b_write (a + 1, b1);[m
+[32m+[m[32m    word wres = w_read (a);[m
+[32m+[m[32m    printf ("ww/br \t %04hx=%02hhx%02hhx\n", wres, b1, b0);[m
+[32m+[m[32m    assert (wres == w);[m
+[32m+[m[32m}[m
+[1mdiff --git a/pdp11.h b/pdp11.h[m
+[1mindex 120cb42..b924990 100644[m
+[1m--- a/pdp11.h[m
+[1m+++ b/pdp11.h[m
+[36m@@ -1,4 +1,5 @@[m
+ #include <stdio.h>[m
+[32m+[m[32m#include <assert.h>[m
+ [m
+ typedef  unsigned char byte;     // 8 bit[m
+ typedef unsigned short int word; // 16 bit[m
+[36m@@ -6,9 +7,8 @@[m [mtypedef word Adress;             // 16 bit[m
+ [m
+ #define MEMSIZE (64*1024)[m
+ [m
+[31m-byte mem [MEMSIZE];[m
+[31m-[m
+ void b_write (Adress adr, byte b);[m
+ byte b_read (Adress adr);[m
+ void w_write (Adress adr, word w);[m
+ word w_read (Adress adr);[m
+[32m+[m[32mvoid test_mem ();[m
